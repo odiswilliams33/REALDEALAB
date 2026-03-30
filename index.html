@@ -74,6 +74,58 @@
             font-size: 2em;
         }
 
+        .unit-toggle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .unit-label {
+            font-size: 0.9em;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .unit-options {
+            display: flex;
+            gap: 10px;
+            background: #f7fafc;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .unit-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .unit-option:hover {
+            background: #e2e8f0;
+        }
+
+        .unit-option input[type="radio"] {
+            cursor: pointer;
+        }
+
+        .unit-option input[type="radio"]:checked + span {
+            color: #667eea;
+        }
+
+        .unit-option:has(input:checked) {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
         .subtitle {
             text-align: center;
             color: #718096;
@@ -313,6 +365,10 @@
 
         .price-cell.has-note {
             color: #4c51bf;
+        }
+
+        .weight-input-warning {
+            background-color: #fef9c3 !important;
         }
 
         .karat-select {
@@ -630,6 +686,23 @@
 <body>
     <div class="container">
         <h1>💰 Gold Purchase Calculator</h1>
+        <div class="unit-toggle-container">
+            <span class="unit-label">Weight Unit:</span>
+            <div class="unit-options">
+                <label class="unit-option">
+                    <input type="radio" name="unit" value="grams" checked onchange="handleUnitChange()">
+                    <span>Grams</span>
+                </label>
+                <label class="unit-option">
+                    <input type="radio" name="unit" value="dwt" onchange="handleUnitChange()">
+                    <span>Dwt</span>
+                </label>
+                <label class="unit-option">
+                    <input type="radio" name="unit" value="ozt" onchange="handleUnitChange()">
+                    <span>Ozt</span>
+                </label>
+            </div>
+        </div>
         <div class="market-price-discreet">
             Market: <span id="liveGoldPrice">Loading...</span>
             <button class="refresh-btn-discreet" onclick="fetchLiveGoldPrice()" title="Refresh price">🔄</button>
@@ -682,7 +755,7 @@
                 <thead>
                     <tr>
                         <th style="width: 40px;"><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
-                        <th>Grams</th>
+                        <th id="weightHeader">Grams</th>
                         <th>Karat</th>
                         <th>Purity %</th>
                         <th>Price</th>
@@ -717,6 +790,43 @@
 
         // Set today's date
         document.getElementById('date').valueAsDate = new Date();
+
+        // Track current weight unit
+        let currentUnit = 'grams'; // Options: 'grams', 'dwt', 'ozt'
+
+        function handleUnitChange() {
+            const selectedUnit = document.querySelector('input[name="unit"]:checked').value;
+            const weightHeader = document.getElementById('weightHeader');
+            
+            currentUnit = selectedUnit;
+            
+            // Update table header
+            if (selectedUnit === 'grams') {
+                weightHeader.textContent = 'Grams';
+            } else if (selectedUnit === 'dwt') {
+                weightHeader.textContent = 'Dwt';
+            } else if (selectedUnit === 'ozt') {
+                weightHeader.textContent = 'Ozt';
+            }
+            
+            // Update all weight input backgrounds
+            const tbody = document.getElementById('itemsBody');
+            for (let i = 0; i < tbody.rows.length; i++) {
+                const row = tbody.rows[i];
+                const weightInput = row.cells[1].querySelector('input');
+                const itemId = row.id.split('-')[1];
+                
+                // Add yellow background if not using grams
+                if (selectedUnit !== 'grams') {
+                    weightInput.classList.add('weight-input-warning');
+                } else {
+                    weightInput.classList.remove('weight-input-warning');
+                }
+                
+                // Recalculate
+                calculateItem(parseInt(itemId));
+            }
+        }
 
         // Fetch live gold price from Metals.dev API
         async function fetchLiveGoldPrice() {
@@ -755,7 +865,7 @@
             
             row.innerHTML = `
                 <td><input type="checkbox" class="item-checkbox"></td>
-                <td><input type="number" step="0.01" min="0" value="" placeholder="0" style="max-width: 80px;" oninput="calculateItem(${itemCount})"></td>
+                <td><input type="number" step="0.01" min="0" value="" placeholder="0" style="max-width: 80px;" class="${currentUnit !== 'grams' ? 'weight-input-warning' : ''}" oninput="calculateItem(${itemCount})"></td>
                 <td>
                     <select class="karat-select" onchange="handleKaratChange(${itemCount})">
                         <option value="9K">9K</option>
@@ -775,10 +885,10 @@
 
             calculateTotal();
             
-            // Focus on the Grams field (second cell, first input)
-            const gramsInput = row.cells[1].querySelector('input');
-            if (gramsInput) {
-                gramsInput.focus();
+            // Focus on the weight field (second cell, first input)
+            const weightInput = row.cells[1].querySelector('input');
+            if (weightInput) {
+                weightInput.focus();
             }
         }
 
@@ -813,13 +923,28 @@
 
         function calculateItem(itemId) {
             const row = document.getElementById(`item-${itemId}`);
-            const grams = parseFloat(row.cells[1].querySelector('input').value) || 0;
+            const weight = parseFloat(row.cells[1].querySelector('input').value) || 0;
             const purity = parseFloat(row.cells[3].querySelector('input').value) || 0;
             const spotPrice = parseFloat(document.getElementById('spotPrice').value) || 0;
             const percentSpot = parseFloat(document.getElementById('percentSpot').value) || 0;
 
-            // Calculate: (grams * purity/100 * spotPrice * percentSpot/100) / 31.1034768
-            const price = (grams * (purity / 100) * spotPrice * (percentSpot / 100)) / 31.1034768;
+            let price = 0;
+            
+            // Convert weight to troy ounces based on current unit
+            let weightInOzt = 0;
+            if (currentUnit === 'grams') {
+                // Convert grams to troy ounces (31.1034768 grams per troy ounce)
+                weightInOzt = weight / 31.1034768;
+            } else if (currentUnit === 'dwt') {
+                // Convert pennyweight to troy ounces (20 dwt per troy ounce)
+                weightInOzt = weight / 20;
+            } else if (currentUnit === 'ozt') {
+                // Already in troy ounces
+                weightInOzt = weight;
+            }
+            
+            // Calculate: weightInOzt * purity/100 * spotPrice * percentSpot/100
+            price = weightInOzt * (purity / 100) * spotPrice * (percentSpot / 100);
             
             row.cells[4].textContent = `$${price.toFixed(2)}`;
             

@@ -31,99 +31,11 @@
             padding: 40px;
         }
 
-        .market-price-discreet {
-            text-align: right;
-            font-size: 0.85em;
-            color: #718096;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .market-price-discreet span {
-            color: #f6ad55;
-            font-weight: 600;
-        }
-
-        .refresh-btn-discreet {
-            background: transparent;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            padding: 2px 6px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.3s ease;
-        }
-
-        .refresh-btn-discreet:hover {
-            background: #f7fafc;
-            transform: rotate(180deg);
-            border-color: #cbd5e0;
-        }
-
-        .refresh-btn-discreet:active {
-            transform: scale(0.9) rotate(180deg);
-        }
-
         h1 {
             text-align: center;
             color: #2d3748;
             margin-bottom: 10px;
             font-size: 2em;
-        }
-
-        .unit-toggle-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .unit-label {
-            font-size: 0.9em;
-            color: #4a5568;
-            font-weight: 600;
-        }
-
-        .unit-options {
-            display: flex;
-            gap: 10px;
-            background: #f7fafc;
-            padding: 5px;
-            border-radius: 8px;
-        }
-
-        .unit-option {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9em;
-            font-weight: 600;
-            color: #4a5568;
-        }
-
-        .unit-option:hover {
-            background: #e2e8f0;
-        }
-
-        .unit-option input[type="radio"] {
-            cursor: pointer;
-        }
-
-        .unit-option input[type="radio"]:checked + span {
-            color: #667eea;
-        }
-
-        .unit-option:has(input:checked) {
-            background: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .subtitle {
@@ -144,11 +56,90 @@
             align-items: center;
         }
 
+        .clickable-row {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .clickable-row .settings-arrow {
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 0.9em;
+            transition: transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .clickable-row .settings-arrow.expanded {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .collapsible-content {
+            width: 90%;
+        }
+
         .input-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: auto 1fr 1fr;
             gap: 15px;
             width: 90%;
+            align-items: end;
+        }
+
+        /* Make first column narrower in collapsible row so labels align */
+        #collapsibleSettings .input-row {
+            grid-template-columns: 45fr 55fr;
+        }
+
+        .unit-selector-inline {
+            display: flex;
+            gap: 8px;
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 4px;
+        }
+
+        .unit-option-inline {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .unit-option-inline input[type="radio"] {
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .unit-option-inline input[type="radio"]:checked + span {
+            color: #667eea;
+        }
+
+        .market-price-inline {
+            font-size: 0.75em;
+            color: #667eea;
+            font-weight: 400;
+            white-space: nowrap;
+        }
+
+        .refresh-btn-tiny {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            padding: 0 2px;
+            margin-left: 2px;
+        }
+
+        .refresh-btn-tiny:hover {
+            transform: scale(1.1);
         }
 
         .input-group {
@@ -686,47 +677,52 @@
 <body>
     <div class="container">
         <h1>💰 Gold Purchase Calculator</h1>
-        <div class="unit-toggle-container">
-            <span class="unit-label">Weight Unit:</span>
-            <div class="unit-options">
-                <label class="unit-option">
-                    <input type="radio" name="unit" value="grams" checked onchange="handleUnitChange()">
-                    <span>Grams</span>
-                </label>
-                <label class="unit-option">
-                    <input type="radio" name="unit" value="dwt" onchange="handleUnitChange()">
-                    <span>Dwt</span>
-                </label>
-                <label class="unit-option">
-                    <input type="radio" name="unit" value="ozt" onchange="handleUnitChange()">
-                    <span>Ozt</span>
-                </label>
-            </div>
-        </div>
-        <div class="market-price-discreet">
-            Market: <span id="liveGoldPrice">Loading...</span>
-            <button class="refresh-btn-discreet" onclick="fetchLiveGoldPrice()" title="Refresh price">🔄</button>
-        </div>
 
         <div class="settings-grid">
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Date</label>
-                    <input type="date" id="date" value="">
+            <!-- Always visible row - clickable to expand/collapse -->
+            <div class="input-row clickable-row" onclick="toggleSettings()">
+                <div class="unit-selector-inline">
+                    <label class="unit-option-inline">
+                        <input type="radio" name="unit" value="grams" checked onchange="handleUnitChange(); event.stopPropagation();">
+                        <span>g</span>
+                    </label>
+                    <label class="unit-option-inline">
+                        <input type="radio" name="unit" value="dwt" onchange="handleUnitChange(); event.stopPropagation();">
+                        <span>dwt</span>
+                    </label>
+                    <label class="unit-option-inline">
+                        <input type="radio" name="unit" value="ozt" onchange="handleUnitChange(); event.stopPropagation();">
+                        <span>ozt</span>
+                    </label>
                 </div>
                 <div class="input-group">
-                    <label>Spot Price ($/oz)</label>
-                    <input type="number" id="spotPrice" value="" placeholder="Enter spot price" step="0.01" min="0" maxlength="10" style="max-width: 100%;">
-                </div>
-            </div>
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Seller</label>
-                    <input type="text" id="store" placeholder="Seller name" maxlength="40" value="">
+                    <label>
+                        Spot Price 
+                        <span class="market-price-inline">
+                            (<span id="liveGoldPrice">Loading...</span>
+                            <button class="refresh-btn-tiny" onclick="fetchLiveGoldPrice(); event.stopPropagation();" title="Refresh">🔄</button>)
+                        </span>
+                    </label>
+                    <input type="number" id="spotPrice" value="" placeholder="Enter spot price" step="0.01" min="0" maxlength="10" style="max-width: 100%;" onclick="event.stopPropagation()">
                 </div>
                 <div class="input-group">
                     <label>% of Spot</label>
-                    <input type="number" id="percentSpot" value="90.00" step="1" min="0" max="200">
+                    <input type="number" id="percentSpot" value="90.00" step="1" min="0" max="200" onclick="event.stopPropagation()">
+                </div>
+                <span class="settings-arrow" id="settingsArrow">▼</span>
+            </div>
+            
+            <!-- Collapsible rows -->
+            <div id="collapsibleSettings" class="collapsible-content" style="display: none;">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Date</label>
+                        <input type="date" id="date" value="">
+                    </div>
+                    <div class="input-group">
+                        <label>Seller</label>
+                        <input type="text" id="store" placeholder="Seller name" maxlength="40" value="">
+                    </div>
                 </div>
             </div>
         </div>
@@ -790,6 +786,20 @@
 
         // Set today's date
         document.getElementById('date').valueAsDate = new Date();
+
+        // Toggle settings collapse/expand
+        function toggleSettings() {
+            const collapsible = document.getElementById('collapsibleSettings');
+            const arrow = document.getElementById('settingsArrow');
+            
+            if (collapsible.style.display === 'none') {
+                collapsible.style.display = 'block';
+                arrow.classList.add('expanded');
+            } else {
+                collapsible.style.display = 'none';
+                arrow.classList.remove('expanded');
+            }
+        }
 
         // Track current weight unit
         let currentUnit = 'grams'; // Options: 'grams', 'dwt', 'ozt'
@@ -865,7 +875,7 @@
             
             row.innerHTML = `
                 <td><input type="checkbox" class="item-checkbox"></td>
-                <td><input type="number" step="0.01" min="0" value="" placeholder="0" style="max-width: 80px;" class="${currentUnit !== 'grams' ? 'weight-input-warning' : ''}" oninput="calculateItem(${itemCount})"></td>
+                <td><input type="tel" step="0.01" min="0" value="" placeholder="0" style="max-width: 80px;" class="${currentUnit !== 'grams' ? 'weight-input-warning' : ''}" oninput="calculateItem(${itemCount})"></td>
                 <td>
                     <select class="karat-select" onchange="handleKaratChange(${itemCount})">
                         <option value="9K">9K</option>

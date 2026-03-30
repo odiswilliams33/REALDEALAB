@@ -32,10 +32,41 @@
         }
 
         h1 {
-            text-align: center;
             color: #2d3748;
-            margin-bottom: 10px;
-            font-size: 2em;
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .market-price-header {
+            font-size: 0.85em;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .market-price-header span {
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.2em;
+            }
+            
+            .header-row {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
         }
 
         .subtitle {
@@ -49,7 +80,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             padding: 25px;
             background: #f7fafc;
             border-radius: 12px;
@@ -62,18 +93,16 @@
         }
 
         .clickable-row .settings-arrow {
-            position: absolute;
-            right: -25px;
-            top: 50%;
-            transform: translateY(-50%);
             color: #667eea;
-            font-size: 0.9em;
+            font-size: 1.2em;
             transition: transform 0.3s ease;
-            pointer-events: none;
+            cursor: pointer;
+            padding: 5px;
+            align-self: center;
         }
 
         .clickable-row .settings-arrow.expanded {
-            transform: translateY(-50%) rotate(180deg);
+            transform: rotate(180deg);
         }
 
         .collapsible-content {
@@ -82,15 +111,57 @@
 
         .input-row {
             display: grid;
-            grid-template-columns: auto 1fr 1fr;
+            grid-template-columns: 1fr 1fr auto;
             gap: 15px;
             width: 90%;
             align-items: end;
         }
 
-        /* Make first column narrower in collapsible row so labels align */
-        #collapsibleSettings .input-row {
-            grid-template-columns: 45fr 55fr;
+        .collapsible-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .unit-row {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .date-seller-row {
+            display: flex;
+            gap: 15px;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .date-field {
+            flex: 0 0 35%;
+        }
+
+        .seller-field {
+            flex: 1;
+        }
+
+        .seller-field input {
+            width: 100%;
+        }
+
+        /* Mobile responsive layout */
+        @media (max-width: 768px) {
+            .input-row {
+                grid-template-columns: 1fr 1fr auto;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .unit-selector-inline {
+                justify-content: center;
+                width: 100%;
+            }
         }
 
         .unit-selector-inline {
@@ -101,6 +172,7 @@
             border-radius: 6px;
             border: 1px solid #e2e8f0;
             margin-bottom: 4px;
+            width: fit-content;
         }
 
         .unit-option-inline {
@@ -127,6 +199,7 @@
             color: #667eea;
             font-weight: 400;
             white-space: nowrap;
+            display: inline-block;
         }
 
         .refresh-btn-tiny {
@@ -140,6 +213,14 @@
 
         .refresh-btn-tiny:hover {
             transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .market-price-inline {
+                display: block;
+                margin-top: 2px;
+                font-size: 0.7em;
+            }
         }
 
         .input-group {
@@ -195,26 +276,29 @@
         .summary {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 10px;
         }
 
         .summary-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 12px;
-            border-radius: 10px;
+            padding: 6px 12px;
+            border-radius: 6px;
             color: white;
             text-align: center;
         }
 
         .summary-label {
-            font-size: 0.75em;
+            font-size: 0.7em;
             opacity: 0.9;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .summary-value {
-            font-size: 1.2em;
+            font-size: 1em;
             font-weight: bold;
         }
 
@@ -676,50 +760,55 @@
 </head>
 <body>
     <div class="container">
-        <h1>💰 Gold Purchase Calculator</h1>
+        <div class="header-row">
+            <h1>💰 Gold Purchase Calculator</h1>
+            <div class="market-price-header">
+                Market: <span id="liveGoldPrice">Loading...</span>
+                <button class="refresh-btn-tiny" onclick="fetchLiveGoldPrice()" title="Refresh">🔄</button>
+            </div>
+        </div>
 
         <div class="settings-grid">
             <!-- Always visible row - clickable to expand/collapse -->
             <div class="input-row clickable-row" onclick="toggleSettings()">
-                <div class="unit-selector-inline">
-                    <label class="unit-option-inline">
-                        <input type="radio" name="unit" value="grams" checked onchange="handleUnitChange(); event.stopPropagation();">
-                        <span>g</span>
-                    </label>
-                    <label class="unit-option-inline">
-                        <input type="radio" name="unit" value="dwt" onchange="handleUnitChange(); event.stopPropagation();">
-                        <span>dwt</span>
-                    </label>
-                    <label class="unit-option-inline">
-                        <input type="radio" name="unit" value="ozt" onchange="handleUnitChange(); event.stopPropagation();">
-                        <span>ozt</span>
-                    </label>
-                </div>
                 <div class="input-group">
-                    <label>
-                        Spot Price 
-                        <span class="market-price-inline">
-                            (<span id="liveGoldPrice">Loading...</span>
-                            <button class="refresh-btn-tiny" onclick="fetchLiveGoldPrice(); event.stopPropagation();" title="Refresh">🔄</button>)
-                        </span>
-                    </label>
+                    <label>Spot Price</label>
                     <input type="number" id="spotPrice" value="" placeholder="Enter spot price" step="0.01" min="0" maxlength="10" style="max-width: 100%;" onclick="event.stopPropagation()">
                 </div>
                 <div class="input-group">
                     <label>% of Spot</label>
                     <input type="number" id="percentSpot" value="90.00" step="1" min="0" max="200" onclick="event.stopPropagation()">
                 </div>
-                <span class="settings-arrow" id="settingsArrow">▼</span>
+                <span class="settings-arrow" id="settingsArrow" onclick="toggleSettings(); event.stopPropagation();">▼</span>
             </div>
             
-            <!-- Collapsible rows -->
+            <!-- Collapsible content -->
             <div id="collapsibleSettings" class="collapsible-content" style="display: none;">
-                <div class="input-row">
-                    <div class="input-group">
+                <!-- Unit selector row - centered -->
+                <div class="unit-row">
+                    <div class="unit-selector-inline">
+                        <label class="unit-option-inline">
+                            <input type="radio" name="unit" value="grams" checked onchange="handleUnitChange()">
+                            <span>g</span>
+                        </label>
+                        <label class="unit-option-inline">
+                            <input type="radio" name="unit" value="dwt" onchange="handleUnitChange()">
+                            <span>dwt</span>
+                        </label>
+                        <label class="unit-option-inline">
+                            <input type="radio" name="unit" value="ozt" onchange="handleUnitChange()">
+                            <span>ozt</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Date and Seller on same line -->
+                <div class="date-seller-row">
+                    <div class="input-group date-field">
                         <label>Date</label>
                         <input type="date" id="date" value="">
                     </div>
-                    <div class="input-group">
+                    <div class="input-group seller-field">
                         <label>Seller</label>
                         <input type="text" id="store" placeholder="Seller name" maxlength="40" value="">
                     </div>
@@ -875,7 +964,7 @@
             
             row.innerHTML = `
                 <td><input type="checkbox" class="item-checkbox"></td>
-                <td><input type="tel" step="0.01" min="0" value="" placeholder="0" style="max-width: 80px;" class="${currentUnit !== 'grams' ? 'weight-input-warning' : ''}" oninput="calculateItem(${itemCount})"></td>
+                <td><input type="number" inputmode="decimal" step="0.01" min="0" value="" placeholder="0" style="max-width: 80px;" class="${currentUnit !== 'grams' ? 'weight-input-warning' : ''}" oninput="calculateItem(${itemCount})"></td>
                 <td>
                     <select class="karat-select" onchange="handleKaratChange(${itemCount})">
                         <option value="9K">9K</option>

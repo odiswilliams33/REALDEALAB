@@ -86,31 +86,37 @@
             flex-direction: column;
             gap: 15px;
             margin-bottom: 15px;
-            padding: 25px;
+            padding: 15px 25px 25px 25px;
             background: #f7fafc;
             border-radius: 12px;
             align-items: center;
+            position: relative;
+        }
+
+        .settings-toggle {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            color: #667eea;
+            font-size: 0.7em;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 3px 6px;
+            border-radius: 4px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10;
+        }
+
+        .settings-toggle:hover {
+            background: #edf2f7;
         }
 
         .clickable-row {
             position: relative;
             cursor: pointer;
-        }
-
-        .clickable-row .settings-arrow {
-            position: absolute;
-            right: -30px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #667eea;
-            font-size: 1.2em;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .clickable-row .settings-arrow.expanded {
-            transform: translateY(-50%) rotate(180deg);
         }
 
         .collapsible-content {
@@ -165,10 +171,6 @@
                 grid-template-columns: 1fr 1fr;
                 gap: 10px;
                 width: 100%;
-            }
-
-            .clickable-row .settings-arrow {
-                right: 5px;
             }
 
             .unit-selector-inline {
@@ -765,6 +767,8 @@
         </div>
 
         <div class="settings-grid">
+            <span class="settings-toggle" id="settingsArrow" onclick="toggleSettings(); event.stopPropagation();">Open</span>
+            
             <!-- Always visible row - clickable to expand/collapse -->
             <div class="input-row clickable-row" onclick="toggleSettings()">
                 <div class="input-group">
@@ -775,7 +779,6 @@
                     <label>% of Spot</label>
                     <input type="number" id="percentSpot" value="90.00" step="1" min="0" max="200" onclick="event.stopPropagation()">
                 </div>
-                <span class="settings-arrow" id="settingsArrow" onclick="toggleSettings(); event.stopPropagation();">▼</span>
             </div>
             
             <!-- Collapsible content -->
@@ -869,14 +872,14 @@
         // Toggle settings collapse/expand
         function toggleSettings() {
             const collapsible = document.getElementById('collapsibleSettings');
-            const arrow = document.getElementById('settingsArrow');
+            const toggle = document.getElementById('settingsArrow');
             
             if (collapsible.style.display === 'none') {
                 collapsible.style.display = 'block';
-                arrow.classList.add('expanded');
+                toggle.textContent = 'Close';
             } else {
                 collapsible.style.display = 'none';
-                arrow.classList.remove('expanded');
+                toggle.textContent = 'Open';
             }
         }
 

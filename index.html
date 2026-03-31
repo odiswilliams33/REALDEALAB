@@ -1756,23 +1756,36 @@
         }
 
         function resetApp() {
-            if (confirm('Are you sure you want to reset everything? This will clear all data and restore default settings.')) {
-                // Reset all input fields
+            if (confirm('Reset everything? This will clear all data.')) {
                 document.getElementById('date').valueAsDate = new Date();
                 document.getElementById('store').value = '';
+                document.getElementById('buyer').value = '';
                 document.getElementById('spotPrice').value = '';
                 document.getElementById('percentSpot').value = '90.00';
-                
+
+                // Reset unit to grams
+                currentUnit = 'grams';
+                document.querySelector('input[name="unit"][value="grams"]').checked = true;
+                handleUnitChange();
+
                 // Clear all items
                 const tbody = document.getElementById('itemsBody');
                 tbody.innerHTML = '';
                 itemCount = 0;
-                
-                // Uncheck select all
                 document.getElementById('selectAll').checked = false;
-                
-                // Add initial item
+
+                // Clear photos
+                for (let i = 1; i <= 4; i++) {
+                    const slot = document.getElementById(`slot-${i}`);
+                    const img = slot.querySelector('img');
+                    if (img) img.remove();
+                    slot.querySelectorAll('span').forEach(s => s.style.display = '');
+                    slot.classList.remove('has-photo');
+                    document.getElementById(`photo-input-${i}`).value = '';
+                }
+
                 addItem();
+                calculateTotal();
             }
         }
         // Register service worker for PWA

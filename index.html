@@ -457,8 +457,253 @@
             color: #4c51bf;
         }
 
+        /* Note cell wraps fully */
+        .items-table td.note-cell {
+            white-space: normal;
+            word-break: break-word;
+            min-width: 160px;
+        }
+
+        /* Photo upload section */
+        .photos-section {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .photos-section h3 {
+            color: #2d3748;
+            font-size: 1em;
+            margin-bottom: 12px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .photo-slot {
+            position: relative;
+            aspect-ratio: 1;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 6px;
+            color: #a0aec0;
+            font-size: 0.78em;
+            font-weight: 600;
+            transition: border-color 0.2s;
+        }
+
+        .photo-slot:hover { border-color: #667eea; color: #667eea; }
+        .photo-slot input[type="file"] { display: none; }
+
+        .photo-slot img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-slot .remove-photo {
+            display: none;
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(0,0,0,0.55);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 13px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .photo-slot:hover .remove-photo,
+        .photo-slot.has-photo .remove-photo { display: flex; }
+
+        @media (max-width: 600px) {
+            .photo-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
         .weight-input-warning {
             background-color: #fef9c3 !important;
+        }
+
+        .pdf-btn {
+            background: #b7791f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .pdf-btn:hover {
+            background: #975a16;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(183, 121, 31, 0.4);
+        }
+
+        @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+            body {
+                background: white !important;
+                padding: 0 !important;
+                display: block !important;
+            }
+
+            .container {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                padding: 24px !important;
+                max-width: 100% !important;
+            }
+
+            /* Hide interactive controls */
+            .settings-grid,
+            .section-header > div,
+            .bottom-buttons,
+            .refresh-btn-tiny,
+            .market-price-header,
+            .settings-toggle,
+            .photo-slot input[type="file"],
+            .remove-photo,
+            th:first-child,
+            td:first-child,
+            .summary-line > span {
+                display: none !important;
+            }
+
+            /* Notes must wrap fully in print */
+            .items-table td.note-cell {
+                white-space: normal !important;
+                word-break: break-word !important;
+                overflow: visible !important;
+            }
+
+            .items-table td.note-cell input {
+                white-space: normal !important;
+                word-break: break-word !important;
+                overflow: visible !important;
+                width: 100% !important;
+            }
+
+            /* Photos in print */
+            .photos-section {
+                margin-top: 16px;
+                page-break-inside: avoid;
+            }
+
+            .photo-grid {
+                display: grid !important;
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 10px !important;
+            }
+
+            .photo-slot {
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 6px !important;
+                aspect-ratio: 1 !important;
+                overflow: hidden !important;
+            }
+
+            /* Hide empty slots in print */
+            .photo-slot:not(.has-photo) { display: none !important; }
+
+            .header-row {
+                border-bottom: 2px solid #2d3748;
+                padding-bottom: 10px;
+                margin-bottom: 14px;
+            }
+
+            /* Print-only meta block */
+            #printMeta {
+                display: flex !important;
+                flex-wrap: wrap;
+                gap: 24px;
+                background: #f7fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 10px 16px;
+                margin-bottom: 14px;
+                font-size: 0.88em;
+                color: #4a5568;
+            }
+
+            #printMeta strong { color: #2d3748; }
+
+            .summary-line {
+                margin-bottom: 14px;
+                font-size: 1em;
+            }
+
+            .section-header {
+                margin-bottom: 10px;
+            }
+
+            .items-table thead { display: table-header-group !important; }
+            .items-table { margin-bottom: 0; }
+
+            .items-table input,
+            .items-table select {
+                border: none !important;
+                background: transparent !important;
+                font-size: 0.92em !important;
+                padding: 0 !important;
+                height: auto !important;
+                pointer-events: none !important;
+                -webkit-appearance: none !important;
+                appearance: none !important;
+                width: auto !important;
+            }
+
+            .karat-select {
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                height: auto !important;
+                -webkit-appearance: none !important;
+                appearance: none !important;
+                width: auto !important;
+            }
+
+            /* Hide summary-line box — printMeta replaces it */
+            .summary-line {
+                background: none !important;
+                border: none !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
+                margin-bottom: 14px;
+                font-size: 1em;
+            }
+                display: block !important;
+                margin-top: 20px;
+                font-size: 0.75em;
+                color: #a0aec0;
+                border-top: 1px solid #e2e8f0;
+                padding-top: 8px;
+                text-align: right;
+            }
         }
 
         .karat-select {
@@ -812,11 +1057,32 @@
                         <input type="text" id="store" placeholder="Seller name" maxlength="40" value="">
                     </div>
                 </div>
+                <div class="date-seller-row">
+                    <div class="input-group seller-field">
+                        <label>Buyer</label>
+                        <input type="text" id="buyer" placeholder="Buyer name" maxlength="40" value="">
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="summary-line">
-            <span>Grams: <strong id="totalGrams">0.00</strong></span>
+            <!-- Print-only metadata block -->
+            <div id="printMeta" style="display:none; width:100%;">
+                <div style="flex:1; display:flex; flex-wrap:wrap; gap:12px 24px;">
+                    <div><span>Date: </span><strong id="printDate"></strong></div>
+                    <div><span>Seller: </span><strong id="printSeller"></strong></div>
+                    <div><span>Buyer: </span><strong id="printBuyer"></strong></div>
+                    <div><span>Spot Price: </span><strong id="printSpot"></strong></div>
+                    <div><span>% of Spot: </span><strong id="printPercent"></strong></div>
+                    <div><span>Weight Unit: </span><strong id="printUnit"></strong></div>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; padding-left:24px; border-left:1px solid #e2e8f0; margin-left:8px;">
+                    <div style="font-size:0.85em; color:#4a5568;"><span id="printWeightLabel">Grams</span>: <strong id="printTotalGrams" style="color:#667eea; font-size:1.2em;"></strong></div>
+                    <div style="font-size:0.85em; color:#4a5568;">Total Cost: <strong id="printTotalCost" style="color:#667eea; font-size:1.2em;"></strong></div>
+                </div>
+            </div>
+            <span><span id="weightLabel">Grams</span>: <strong id="totalGrams">0.00</strong></span>
             <span>Total Cost: <strong id="totalCost">$0.00</strong></span>
         </div>
 
@@ -824,7 +1090,10 @@
             <div class="section-header">
                 <h2>Gold Items</h2>
                 <div style="display: flex; gap: 10px;">
+                    <button class="pdf-btn" onclick="exportPDF()">🖨️ Export PDF</button>
                     <button class="export-btn" onclick="exportCSV()">📥 Export CSV</button>
+                    <button class="export-btn" style="background:#6b7280;" onclick="document.getElementById('importCSVInput').click()">📂 Import CSV</button>
+                    <input type="file" id="importCSVInput" accept=".csv" style="display:none;" onchange="importCSV(event)">
                     <button class="delete-selected-btn" onclick="deleteSelected()">🗑️ Delete Selected</button>
                 </div>
             </div>
@@ -849,6 +1118,38 @@
                 <button class="reset-btn" onclick="resetApp()">🔄 Reset</button>
             </div>
         </div>
+        <!-- Photo upload section -->
+        <div class="photos-section">
+            <h3>📷 Photos (up to 4)</h3>
+            <div class="photo-grid">
+                <div class="photo-slot" id="slot-1" onclick="document.getElementById('photo-input-1').click()">
+                    <input type="file" id="photo-input-1" accept="image/*" onchange="loadPhoto(1, this)">
+                    <span style="font-size:1.6em;">📷</span>
+                    <span>Add Photo</span>
+                    <button class="remove-photo" onclick="removePhoto(event, 1)">✕</button>
+                </div>
+                <div class="photo-slot" id="slot-2" onclick="document.getElementById('photo-input-2').click()">
+                    <input type="file" id="photo-input-2" accept="image/*" onchange="loadPhoto(2, this)">
+                    <span style="font-size:1.6em;">📷</span>
+                    <span>Add Photo</span>
+                    <button class="remove-photo" onclick="removePhoto(event, 2)">✕</button>
+                </div>
+                <div class="photo-slot" id="slot-3" onclick="document.getElementById('photo-input-3').click()">
+                    <input type="file" id="photo-input-3" accept="image/*" onchange="loadPhoto(3, this)">
+                    <span style="font-size:1.6em;">📷</span>
+                    <span>Add Photo</span>
+                    <button class="remove-photo" onclick="removePhoto(event, 3)">✕</button>
+                </div>
+                <div class="photo-slot" id="slot-4" onclick="document.getElementById('photo-input-4').click()">
+                    <input type="file" id="photo-input-4" accept="image/*" onchange="loadPhoto(4, this)">
+                    <span style="font-size:1.6em;">📷</span>
+                    <span>Add Photo</span>
+                    <button class="remove-photo" onclick="removePhoto(event, 4)">✕</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="printFooter" style="display:none;">Generated by Gold Purchase Calculator</div>
     </div>
 
     <script>
@@ -889,16 +1190,20 @@
         function handleUnitChange() {
             const selectedUnit = document.querySelector('input[name="unit"]:checked').value;
             const weightHeader = document.getElementById('weightHeader');
-            
+            const weightLabel = document.getElementById('weightLabel');
+
             currentUnit = selectedUnit;
-            
-            // Update table header
+
+            // Update table header and summary label
             if (selectedUnit === 'grams') {
                 weightHeader.textContent = 'Grams';
+                weightLabel.textContent = 'Grams';
             } else if (selectedUnit === 'dwt') {
                 weightHeader.textContent = 'Dwt';
+                weightLabel.textContent = 'Dwt';
             } else if (selectedUnit === 'ozt') {
                 weightHeader.textContent = 'Ozt';
+                weightLabel.textContent = 'Ozt';
             }
             
             // Update all weight input backgrounds
@@ -972,7 +1277,7 @@
                 </td>
                 <td><input type="number" step="0.01" min="0" max="100" value="41.67" oninput="calculateItem(${itemCount})"></td>
                 <td class="price-cell">$0.00</td>
-                <td><input type="text" placeholder="Note" oninput="updateNoteIndicator(${itemCount})" onchange="calculateTotal()"></td>
+                <td class="note-cell"><input type="text" placeholder="Note" oninput="updateNoteIndicator(${itemCount})" onchange="calculateTotal()"></td>
             `;
 
             calculateTotal();
@@ -1102,6 +1407,89 @@
             }
         });
 
+        function loadPhoto(slotNum, input) {
+            if (!input.files || !input.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const slot = document.getElementById(`slot-${slotNum}`);
+                // Remove existing img if any
+                const existing = slot.querySelector('img');
+                if (existing) existing.remove();
+                // Hide placeholder text/icon
+                slot.querySelectorAll('span').forEach(s => s.style.display = 'none');
+                // Add image
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                slot.insertBefore(img, slot.querySelector('.remove-photo'));
+                slot.classList.add('has-photo');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        function removePhoto(e, slotNum) {
+            e.stopPropagation();
+            const slot = document.getElementById(`slot-${slotNum}`);
+            const img = slot.querySelector('img');
+            if (img) img.remove();
+            slot.querySelectorAll('span').forEach(s => s.style.display = '');
+            slot.classList.remove('has-photo');
+            document.getElementById(`photo-input-${slotNum}`).value = '';
+        }
+
+        function exportPDF() {
+            document.getElementById('printDate').textContent = document.getElementById('date').value || '—';
+            document.getElementById('printSeller').textContent = document.getElementById('store').value || '—';
+            document.getElementById('printBuyer').textContent = document.getElementById('buyer').value || '—';
+            const spot = document.getElementById('spotPrice').value;
+            document.getElementById('printSpot').textContent = spot ? `$${parseFloat(spot).toFixed(2)}` : '—';
+            document.getElementById('printPercent').textContent = document.getElementById('percentSpot').value + '%';
+            const unitMap = { grams: 'Grams (g)', dwt: 'Pennyweight (dwt)', ozt: 'Troy Ounce (ozt)' };
+            document.getElementById('printUnit').textContent = unitMap[currentUnit] || currentUnit;
+            document.getElementById('printWeightLabel').textContent = document.getElementById('weightLabel').textContent;
+            document.getElementById('printTotalGrams').textContent = document.getElementById('totalGrams').textContent;
+            document.getElementById('printTotalCost').textContent = document.getElementById('totalCost').textContent;
+
+            // Convert note inputs → plain text spans so they wrap in print
+            const noteCells = document.querySelectorAll('.note-cell');
+            noteCells.forEach(cell => {
+                const input = cell.querySelector('input');
+                if (!input) return;
+                const span = document.createElement('span');
+                span.className = 'print-note';
+                span.textContent = input.value || '';
+                span.style.cssText = 'white-space:normal;word-break:break-word;display:block;font-size:0.95em;';
+                input.style.display = 'none';
+                cell.appendChild(span);
+            });
+
+            // Convert karat selects → plain text spans so they display cleanly
+            const karatSelects = document.querySelectorAll('.karat-select');
+            karatSelects.forEach(sel => {
+                const span = document.createElement('span');
+                span.className = 'print-karat';
+                span.textContent = sel.value;
+                span.style.cssText = 'font-size:0.95em;font-weight:600;';
+                sel.style.display = 'none';
+                sel.parentNode.insertBefore(span, sel.nextSibling);
+            });
+
+            window.print();
+
+            // Restore inputs after print dialog closes
+            noteCells.forEach(cell => {
+                const span = cell.querySelector('.print-note');
+                const input = cell.querySelector('input');
+                if (span) span.remove();
+                if (input) input.style.display = '';
+            });
+
+            karatSelects.forEach(sel => {
+                const span = sel.parentNode.querySelector('.print-karat');
+                if (span) span.remove();
+                sel.style.display = '';
+            });
+        }
+
         function exportCSV() {
             const date = document.getElementById('date').value;
             const seller = document.getElementById('store').value;
@@ -1115,6 +1503,7 @@
             let csv = 'Gold Purchase Calculator Export\n\n';
             csv += `Date,${date}\n`;
             csv += `Seller,${seller}\n`;
+            csv += `Buyer,${document.getElementById('buyer').value || ''}\n`;
             csv += `Spot Price,${spotPrice}\n`;
             csv += `% of Spot,${percentSpot}\n`;
             csv += `Total Grams,${totalGrams}\n`;
@@ -1145,6 +1534,109 @@
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
+        }
+
+        function importCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const lines = e.target.result.split('\n').map(l => l.trim());
+
+                let date = '', seller = '', buyer = '', spotPrice = '', percentSpot = '';
+                let itemStartIndex = -1;
+
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    if (!line) continue;
+                    const commaIdx = line.indexOf(',');
+                    if (commaIdx === -1) continue;
+                    const key = line.substring(0, commaIdx).trim().toLowerCase();
+                    const val = line.substring(commaIdx + 1).trim().replace(/^"|"$/g, '');
+
+                    if (key === 'date')         date = val;
+                    else if (key === 'seller')  seller = val;
+                    else if (key === 'buyer')   buyer = val;
+                    else if (key === 'spot price') spotPrice = val;
+                    else if (key === '% of spot')  percentSpot = val;
+                    else if (key === 'grams' || key === 'dwt' || key === 'ozt') {
+                        // This is the column header row
+                        itemStartIndex = i + 1;
+                        break;
+                    }
+                }
+
+                if (itemStartIndex === -1) {
+                    alert('Could not find item data in this CSV. Make sure it was exported from Gold Purchase Calculator.');
+                    event.target.value = '';
+                    return;
+                }
+
+                // Populate header fields
+                if (date) document.getElementById('date').value = date;
+                if (seller) document.getElementById('store').value = seller;
+                if (buyer) document.getElementById('buyer').value = buyer;
+                if (spotPrice) document.getElementById('spotPrice').value = spotPrice;
+                if (percentSpot) document.getElementById('percentSpot').value = percentSpot;
+
+                // Clear existing items
+                const tbody = document.getElementById('itemsBody');
+                tbody.innerHTML = '';
+                itemCount = 0;
+
+                for (let i = itemStartIndex; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    const row = parseCSVLine(line);
+                    if (!row || row.length < 2) continue;
+
+                    const weight = row[0]?.trim() || '';
+                    const karat  = row[1]?.trim() || '10K';
+                    const purity = row[2]?.trim() || '41.67';
+                    const note   = row[4]?.trim() || '';
+
+                    addItem();
+                    const newRow = document.getElementById(`item-${itemCount}`);
+                    newRow.cells[1].querySelector('input').value = weight;
+
+                    const karatSelect = newRow.cells[2].querySelector('select');
+                    const opt = [...karatSelect.options].find(o => o.value === karat);
+                    karatSelect.value = opt ? karat : 'Custom';
+
+                    const purityInput = newRow.cells[3].querySelector('input');
+                    purityInput.value = purity;
+                    purityInput.disabled = karatSelect.value !== 'Custom';
+
+                    newRow.cells[5].querySelector('input').value = note;
+                    calculateItem(itemCount);
+                }
+
+                if (tbody.rows.length === 0) addItem();
+                calculateTotal();
+                event.target.value = '';
+                alert('CSV imported successfully!');
+            };
+            reader.readAsText(file);
+        }
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                if (ch === '"') {
+                    inQuotes = !inQuotes;
+                } else if (ch === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += ch;
+                }
+            }
+            result.push(current);
+            return result;
         }
 
         function deleteSelected() {

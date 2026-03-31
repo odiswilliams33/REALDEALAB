@@ -541,8 +541,9 @@
             .photo-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        .weight-input-warning {
-            background-color: #fef9c3 !important;
+        /* printMeta hidden on screen, shown only in print */
+        #printMeta {
+            display: none;
         }
 
         .pdf-btn {
@@ -564,54 +565,171 @@
         }
 
         @media print {
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
 
             body {
                 background: white !important;
                 padding: 0 !important;
+                margin: 0 !important;
                 display: block !important;
             }
 
             .container {
                 box-shadow: none !important;
                 border-radius: 0 !important;
-                padding: 24px !important;
+                padding: 20px 24px !important;
                 max-width: 100% !important;
+                width: 100% !important;
             }
 
-            /* Hide interactive controls */
+            /* ── HIDE everything not needed ── */
             .settings-grid,
+            .market-price-header,
             .section-header > div,
             .bottom-buttons,
-            .refresh-btn-tiny,
-            .market-price-header,
-            .settings-toggle,
             .photo-slot input[type="file"],
             .remove-photo,
-            th:first-child,
-            td:first-child,
             .summary-line > span {
                 display: none !important;
             }
 
-            /* Notes must wrap fully in print */
-            .items-table td.note-cell {
-                white-space: normal !important;
-                word-break: break-word !important;
-                overflow: visible !important;
+            /* ── HEADER ── */
+            .header-row {
+                display: flex !important;
+                justify-content: space-between !important;
+                border-bottom: 2px solid #2d3748;
+                padding-bottom: 10px;
+                margin-bottom: 12px;
             }
 
-            .items-table td.note-cell input {
-                white-space: normal !important;
-                word-break: break-word !important;
-                overflow: visible !important;
+            /* ── META INFO BOX ── */
+            #printMeta {
+                display: flex !important;
                 width: 100% !important;
+                background: #f7fafc !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 8px !important;
+                padding: 10px 16px !important;
+                margin-bottom: 14px !important;
+                font-size: 0.88em !important;
+                color: #4a5568 !important;
+                box-sizing: border-box !important;
             }
 
-            /* Photos in print */
+            #printMeta strong { color: #2d3748; }
+
+            /* ── SUMMARY LINE: hide the live screen version ── */
+            .summary-line {
+                display: none !important;
+            }
+
+            /* ── SECTION HEADER ── */
+            .section-header {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                margin-bottom: 10px !important;
+            }
+
+            /* ── TABLE: full reset from mobile card layout ── */
+            .items-table {
+                display: table !important;
+                width: 100% !important;
+                border-collapse: collapse !important;
+                margin-bottom: 0 !important;
+                table-layout: auto !important;
+            }
+
+            .items-table thead {
+                display: table-header-group !important;
+                background: #2d3748 !important;
+            }
+
+            .items-table thead tr {
+                display: table-row !important;
+            }
+
+            .items-table th {
+                display: table-cell !important;
+                color: white !important;
+                padding: 9px 10px !important;
+                font-size: 0.85em !important;
+                font-weight: 600 !important;
+                text-align: left !important;
+            }
+
+            .items-table tbody {
+                display: table-row-group !important;
+            }
+
+            .items-table tbody tr {
+                display: table-row !important;
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                position: static !important;
+            }
+
+            .items-table td {
+                display: table-cell !important;
+                padding: 8px 10px !important;
+                border-bottom: 1px solid #e2e8f0 !important;
+                margin: 0 !important;
+                width: auto !important;
+                vertical-align: middle !important;
+                white-space: normal !important;
+            }
+
+            /* Hide checkbox column */
+            .items-table th:first-child,
+            .items-table td:first-child {
+                display: none !important;
+            }
+
+            /* Note cell wraps */
+            .items-table td.note-cell {
+                word-break: break-word !important;
+            }
+
+            /* Strip all input/select chrome */
+            .items-table input,
+            .items-table select,
+            .karat-select {
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                height: auto !important;
+                width: auto !important;
+                font-size: 0.92em !important;
+                -webkit-appearance: none !important;
+                appearance: none !important;
+                pointer-events: none !important;
+            }
+
+            /* Remove ALL mobile pseudo-element labels and arrows */
+            .items-table td::before,
+            .items-table td::after,
+            .items-table tr::before,
+            .items-table tr::after,
+            .items-table tbody tr::after {
+                display: none !important;
+                content: '' !important;
+            }
+
+            /* ── PHOTOS ── */
             .photos-section {
-                margin-top: 16px;
-                page-break-inside: avoid;
+                margin-top: 14px !important;
+                padding: 12px 16px !important;
+                page-break-inside: avoid !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 8px !important;
+                background: #f7fafc !important;
             }
 
             .photo-grid {
@@ -625,84 +743,20 @@
                 border-radius: 6px !important;
                 aspect-ratio: 1 !important;
                 overflow: hidden !important;
+                display: flex !important;
             }
 
-            /* Hide empty slots in print */
             .photo-slot:not(.has-photo) { display: none !important; }
 
-            .header-row {
-                border-bottom: 2px solid #2d3748;
-                padding-bottom: 10px;
-                margin-bottom: 14px;
-            }
-
-            /* Print-only meta block */
-            #printMeta {
-                display: flex !important;
-                flex-wrap: wrap;
-                gap: 24px;
-                background: #f7fafc;
-                border: 1px solid #e2e8f0;
-                border-radius: 8px;
-                padding: 10px 16px;
-                margin-bottom: 14px;
-                font-size: 0.88em;
-                color: #4a5568;
-            }
-
-            #printMeta strong { color: #2d3748; }
-
-            .summary-line {
-                margin-bottom: 14px;
-                font-size: 1em;
-            }
-
-            .section-header {
-                margin-bottom: 10px;
-            }
-
-            .items-table thead { display: table-header-group !important; }
-            .items-table { margin-bottom: 0; }
-
-            .items-table input,
-            .items-table select {
-                border: none !important;
-                background: transparent !important;
-                font-size: 0.92em !important;
-                padding: 0 !important;
-                height: auto !important;
-                pointer-events: none !important;
-                -webkit-appearance: none !important;
-                appearance: none !important;
-                width: auto !important;
-            }
-
-            .karat-select {
-                border: none !important;
-                background: transparent !important;
-                padding: 0 !important;
-                height: auto !important;
-                -webkit-appearance: none !important;
-                appearance: none !important;
-                width: auto !important;
-            }
-
-            /* Hide summary-line box — printMeta replaces it */
-            .summary-line {
-                background: none !important;
-                border: none !important;
-                border-radius: 0 !important;
-                padding: 0 !important;
-                margin-bottom: 14px;
-                font-size: 1em;
-            }
+            /* ── FOOTER ── */
+            #printFooter {
                 display: block !important;
-                margin-top: 20px;
-                font-size: 0.75em;
-                color: #a0aec0;
-                border-top: 1px solid #e2e8f0;
-                padding-top: 8px;
-                text-align: right;
+                margin-top: 20px !important;
+                font-size: 0.75em !important;
+                color: #a0aec0 !important;
+                border-top: 1px solid #e2e8f0 !important;
+                padding-top: 8px !important;
+                text-align: right !important;
             }
         }
 
@@ -1066,22 +1120,23 @@
             </div>
         </div>
 
-        <div class="summary-line">
-            <!-- Print-only metadata block -->
-            <div id="printMeta" style="display:none; width:100%;">
-                <div style="flex:1; display:flex; flex-wrap:wrap; gap:12px 24px;">
-                    <div><span>Date: </span><strong id="printDate"></strong></div>
-                    <div><span>Seller: </span><strong id="printSeller"></strong></div>
-                    <div><span>Buyer: </span><strong id="printBuyer"></strong></div>
-                    <div><span>Spot Price: </span><strong id="printSpot"></strong></div>
-                    <div><span>% of Spot: </span><strong id="printPercent"></strong></div>
-                    <div><span>Weight Unit: </span><strong id="printUnit"></strong></div>
-                </div>
-                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; padding-left:24px; border-left:1px solid #e2e8f0; margin-left:8px;">
-                    <div style="font-size:0.85em; color:#4a5568;"><span id="printWeightLabel">Grams</span>: <strong id="printTotalGrams" style="color:#667eea; font-size:1.2em;"></strong></div>
-                    <div style="font-size:0.85em; color:#4a5568;">Total Cost: <strong id="printTotalCost" style="color:#667eea; font-size:1.2em;"></strong></div>
-                </div>
+        <!-- Print-only metadata block — lives outside summary-line so CSS can show it -->
+        <div id="printMeta">
+            <div style="flex:1; display:flex; flex-wrap:wrap; gap:12px 24px;">
+                <div><span>Date: </span><strong id="printDate"></strong></div>
+                <div><span>Seller: </span><strong id="printSeller"></strong></div>
+                <div><span>Buyer: </span><strong id="printBuyer"></strong></div>
+                <div><span>Spot Price: </span><strong id="printSpot"></strong></div>
+                <div><span>% of Spot: </span><strong id="printPercent"></strong></div>
+                <div><span>Weight Unit: </span><strong id="printUnit"></strong></div>
             </div>
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; padding-left:24px; border-left:1px solid #e2e8f0; margin-left:8px;">
+                <div style="font-size:0.85em; color:#4a5568;"><span id="printWeightLabel">Grams</span>: <strong id="printTotalGrams" style="color:#667eea; font-size:1.2em;"></strong></div>
+                <div style="font-size:0.85em; color:#4a5568;">Total Cost: <strong id="printTotalCost" style="color:#667eea; font-size:1.2em;"></strong></div>
+            </div>
+        </div>
+
+        <div class="summary-line">
             <span><span id="weightLabel">Grams</span>: <strong id="totalGrams">0.00</strong></span>
             <span>Total Cost: <strong id="totalCost">$0.00</strong></span>
         </div>
@@ -1436,7 +1491,8 @@
             document.getElementById(`photo-input-${slotNum}`).value = '';
         }
 
-        function exportPDF() {
+        function preparePrint() {
+            // Populate meta fields
             document.getElementById('printDate').textContent = document.getElementById('date').value || '—';
             document.getElementById('printSeller').textContent = document.getElementById('store').value || '—';
             document.getElementById('printBuyer').textContent = document.getElementById('buyer').value || '—';
@@ -1449,9 +1505,8 @@
             document.getElementById('printTotalGrams').textContent = document.getElementById('totalGrams').textContent;
             document.getElementById('printTotalCost').textContent = document.getElementById('totalCost').textContent;
 
-            // Convert note inputs → plain text spans so they wrap in print
-            const noteCells = document.querySelectorAll('.note-cell');
-            noteCells.forEach(cell => {
+            // Convert note inputs → plain wrapping text
+            document.querySelectorAll('.note-cell').forEach(cell => {
                 const input = cell.querySelector('input');
                 if (!input) return;
                 const span = document.createElement('span');
@@ -1462,9 +1517,8 @@
                 cell.appendChild(span);
             });
 
-            // Convert karat selects → plain text spans so they display cleanly
-            const karatSelects = document.querySelectorAll('.karat-select');
-            karatSelects.forEach(sel => {
+            // Convert karat selects → plain text
+            document.querySelectorAll('.karat-select').forEach(sel => {
                 const span = document.createElement('span');
                 span.className = 'print-karat';
                 span.textContent = sel.value;
@@ -1473,21 +1527,29 @@
                 sel.parentNode.insertBefore(span, sel.nextSibling);
             });
 
+            // Convert all remaining inputs in table rows → plain text
+            document.querySelectorAll('.items-table tbody input').forEach(input => {
+                if (input.style.display === 'none') return; // already handled
+                const span = document.createElement('span');
+                span.className = 'print-input';
+                span.textContent = input.value || '';
+                span.style.cssText = 'font-size:0.92em;';
+                input.style.display = 'none';
+                input.parentNode.insertBefore(span, input.nextSibling);
+            });
+        }
+
+        function restoreAfterPrint() {
+            document.querySelectorAll('.print-note, .print-karat, .print-input').forEach(el => el.remove());
+            document.querySelectorAll('.items-table tbody input, .karat-select').forEach(el => el.style.display = '');
+        }
+
+        // Hook into browser print events — works for Export PDF button AND iPhone share/print
+        window.addEventListener('beforeprint', preparePrint);
+        window.addEventListener('afterprint', restoreAfterPrint);
+
+        function exportPDF() {
             window.print();
-
-            // Restore inputs after print dialog closes
-            noteCells.forEach(cell => {
-                const span = cell.querySelector('.print-note');
-                const input = cell.querySelector('input');
-                if (span) span.remove();
-                if (input) input.style.display = '';
-            });
-
-            karatSelects.forEach(sel => {
-                const span = sel.parentNode.querySelector('.print-karat');
-                if (span) span.remove();
-                sel.style.display = '';
-            });
         }
 
         function exportCSV() {

@@ -184,7 +184,7 @@
         <summary style="cursor:pointer; font-size: 0.7rem; font-weight: 700; color: var(--primary);">CONFIGURATION</summary>
         <div class="grid-settings">
             <div class="input-group"><label>Date</label><input type="date" id="docDate" oninput="syncHeader()"></div>
-            <div class="input-group"><label>Seller Name</label><input type="text" id="seller" placeholder="Full Legal Name" oninput="syncHeader()"></div>
+            <div class="input-group"><label>Seller Name</label><input type="text" id="seller" placeholder="Store or Entity Name" oninput="syncHeader()"></div>
             <div class="input-group"><label>Spot Price</label><input type="number" id="spotPrice" oninput="recalc()"></div>
             <div class="input-group"><label>% of Spot</label><input type="number" id="percent" value="90" oninput="recalc()"></div>
             <div class="input-group"><label>Valuation Unit</label>
@@ -194,7 +194,7 @@
                     <option value="ozt">Ozt (Troy)</option>
                 </select>
             </div>
-            <div class="input-group"><label>Buyer</label><input type="text" id="buyer" placeholder="Store or Agent Name" oninput="syncHeader()"></div>
+            <div class="input-group"><label>Buyer</label><input type="text" id="buyer" placeholder="Store or Entity Name" oninput="syncHeader()"></div>
         </div>
     </details>
 
@@ -230,6 +230,7 @@
 
     <div style="display:flex; gap:10px; margin-top:12px;">
         <button class="btn-bottom" onclick="window.print()">🖨️ Receipt</button>
+        <button class="btn-bottom" onclick="shareReceipt()" id="shareBtn">📤 Share</button>
         <button class="btn-bottom btn-bottom-danger" onclick="resetApp()">🔄 Clear</button>
     </div>
 </div>
@@ -478,6 +479,81 @@
             syncHeader();
             recalc();
         }
+    }
+
+    async function shareReceipt() {
+        const spot    = parseFloat(document.getElementById('spotPrice').value) || 0;
+        const pct     = parseFloat(document.getElementById('percent').value) / 100 || 0;
+        const unit    = document.getElementById('unit').value;
+        const unitLabel = unit === 'ozt' ? 'ozt' : (unit === 'dwt' ? 'dwt' : 'g');
+        const date    = document.getElementById('docDate').value || new Date().toLocaleDateString();
+        const seller  = document.getElementById('seller').value || '—';
+        const buyer   = document.getElementById('buyer').value || '—';
+
+        let totalCost = 0;
+        let rows = '';
+        records.forEach((rec, i) => {
+            const conv  = unit === 'grams' ? 31.1035 : (unit === 'dwt' ? 20 : 1);
+            const price = (rec.weight / conv) * (rec.purity / 100) * spot * pct;
+            totalCost  += price;
+            rows += `<tr>
+                <td style="padding:10px;border-bottom:1px solid #eee;">${i+1}</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;">${rec.karat}</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;">${rec.weight} ${unitLabel}</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;">${rec.purity}%</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;">${rec.notes || '—'}</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;font-weight:700;">$${price.toFixed(2)}</td>
+            </tr>`;
+        });
+
+        const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+        <title>Gold Purchase Receipt</title>
+        <style>body{font-family:-apple-system,sans-serif;padding:30px;color:#111;}
+        h1{font-size:1.5rem;margin-bottom:4px;}
+        .meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0;padding:12px;background:#f9fafb;border-radius:6px;}
+        .meta label{font-size:0.65rem;font-weight:800;color:#6b7280;text-transform:uppercase;display:block;}
+        .meta span{font-weight:700;}
+        table{width:100%;border-collapse:collapse;margin-top:16px;}
+        th{text-align:left;padding:10px;background:#1f2937;color:white;font-size:0.75rem;text-transform:uppercase;}
+        .total{text-align:right;font-size:1.2rem;font-weight:900;padding:14px;}
+        .sig{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:50px;}
+        .sig div{border-top:1px solid #000;padding-top:6px;font-size:0.75rem;font-weight:700;text-align:center;}
+        </style></head><body>
+        <h1>GOLD PURCHASE RECEIPT</h1>
+        <p style="color:#6b7280;font-size:0.85rem;">Date: ${date}</p>
+        <div class="meta">
+            <div><label>Seller</label><span>${seller}</span></div>
+            <div><label>Buyer</label><span>${buyer}</span></div>
+            <div><label>Spot Price</label><span>$${spot.toFixed(2)}</span></div>
+            <div><label>% of Spot</label><span>${(pct*100).toFixed(2)}%</span></div>
+        </div>
+        <table>
+            <thead><tr><th>#</th><th>Karat</th><th>Weight</th><th>Purity</th><th>Notes</th><th>Amount</th></tr></thead>
+            <tbody>${rows}</tbody>
+            <tfoot><tr><td colspan="5" class="total">TOTAL:</td>
+            <td class="total">$${totalCost.toFixed(2)}</td></tr></tfoot>
+        </table>
+        <div class="sig"><div>SELLER SIGNATURE</div><div>BUYER SIGNATURE</div></div>
+        </body></html>`;
+
+        const blob = new Blob([html], { type: 'text/html' });
+        const file = new File([blob], `receipt-${date}.html`, { type: 'text/html' });
+
+        // Try native share (iOS/Android)
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({ files: [file], title: 'Gold Purchase Receipt', text: `Receipt — ${date}` });
+                return;
+            } catch(e) { if (e.name === 'AbortError') return; }
+        }
+
+        // Fallback: download the file
+        const url = URL.createObjectURL(blob);
+        const a   = document.createElement('a');
+        a.href    = url;
+        a.download = `receipt-${date}.html`;
+        a.click();
+        URL.revokeObjectURL(url);
     }
 
     window.onload = async () => {

@@ -6,27 +6,31 @@
     <title>Gold Tracker Pro</title>
     <style>
         :root {
-            --primary: #d4af37;
-            --gold: #d4af37;
-            --gold-soft: #f7edc8;
-            --gold-dark: #9a7421;
+            --primary: #4b5563;
+            --primary-dark: #1f2937;
+            --primary-light: #f9fafb;
+            --gold: #6b7280;
+            --gold-soft: #f3f4f6;
+            --gold-dark: #374151;
+            --gold-light: #f9fafb;
             --ink: #111827;
             --charcoal: #1f2937;
-            --muted: #46556a;
-            --bg: #f4f6f8;
+            --muted: #6b7280;
+            --bg: #e5e7eb;
             --card: #ffffff;
-            --panel: #f8fafc;
-            --border: #cbd5e1;
-            --border-dark: #1f2937;
-            --danger: #a31616;
-            --dark-badge: #263244;
+            --panel: #f9fafb;
+            --border: #e5e7eb;
+            --border-dark: #d1d5db;
+            --danger: #374151;
+            --dark-badge: #374151;
             --price-blue: #111827;
-            --warning-yellow: #fff8df;
+            --warning-yellow: #fefce8;
+            --success: #1f2937;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
-        body { background: var(--bg); padding: 8px; padding-bottom: 56px; color: var(--ink); }
-        .container { max-width: 700px; margin: 0 auto; background: var(--card); border-radius: 12px; padding: 18px 20px 22px; border: 1px solid var(--border); box-shadow: 0 10px 26px rgba(15, 23, 42, 0.10); }
+        body { background: linear-gradient(160deg, #d1d5db 0%, #e5e7eb 50%, #f3f4f6 100%); min-height: 100vh; padding: 8px; padding-bottom: 56px; color: var(--ink); }
+        .container { max-width: 700px; margin: 0 auto; background: var(--card); border-radius: 14px; padding: 18px 20px 22px; border: 1px solid #e5e7eb; box-shadow: 0 10px 40px rgba(31,41,55,0.12), 0 2px 8px rgba(31,41,55,0.06); }
 
         /* PRINT STYLES */
         #printHeader { display: none; }
@@ -46,16 +50,16 @@
             .meta-item span { font-size: 0.9rem; font-weight: 700; }
         }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 3px solid var(--charcoal); padding-bottom: 12px; }
-        .header h2 { font-size: 1.75rem; line-height: 1; letter-spacing: -0.04em; color: #111827; font-weight: 900; }
-        .spot-badge { background: #f8fafc; color: var(--charcoal); padding: 9px 16px; border-radius: 4px; border: 1px solid var(--border); border-bottom: 2px solid var(--gold); font-weight: 900; font-size: 0.95rem; cursor: pointer; letter-spacing: -0.01em; }
-        .spot-badge:hover { background: var(--gold-soft); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 4px solid #eab308; padding-bottom: 12px; background: linear-gradient(135deg, var(--primary-dark) 0%, #374151 60%, #4b5563 100%); margin: -18px -20px 18px; padding: 18px 20px 14px; border-radius: 12px 12px 0 0; box-shadow: 0 4px 16px rgba(31,41,55,0.25); }
+        .header h2 { font-size: 1.75rem; line-height: 1; letter-spacing: -0.04em; color: #f9fafb; font-weight: 900; }
+        .spot-badge { background: rgba(255,255,255,0.15); color: #fff; padding: 9px 16px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.35); font-weight: 800; font-size: 0.9rem; cursor: pointer; letter-spacing: -0.01em; transition: all 0.2s; backdrop-filter: blur(4px); }
+        .spot-badge:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.6); }
 
         details { margin-bottom: 16px !important; }
-        summary { cursor:pointer; font-size: 0.75rem !important; font-weight: 900 !important; color: var(--charcoal) !important; letter-spacing: .08em; text-transform: uppercase; }
-        .totals-banner { background: var(--charcoal); color: white; padding: 18px 18px; border-radius: 7px; display: flex; justify-content: space-between; align-items: center; margin: 18px 0; border-left: 5px solid var(--gold); }
-        .totals-banner > div:first-child { font-size: 1rem; font-weight: 700; color: #f8fafc; }
-        .total-val { font-size: 1.6rem; font-weight: 950; letter-spacing: .04em; color: white; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+        summary { cursor:pointer; font-size: 0.75rem !important; font-weight: 900 !important; color: var(--primary-dark) !important; letter-spacing: .08em; text-transform: uppercase; }
+        .totals-banner { background: linear-gradient(135deg, var(--primary-dark) 0%, #374151 60%, #4b5563 100%); color: white; padding: 10px 18px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin: 14px 0; box-shadow: 0 4px 16px rgba(31,41,55,0.25); border-bottom: 4px solid #fde68a; }
+        .totals-banner > div:first-child { font-size: 0.88rem; font-weight: 700; color: #d1d5db; }
+        .total-val { font-size: 1.2rem; font-weight: 950; letter-spacing: .04em; color: #f9fafb; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 
         .grid-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
         .input-group { display: flex; flex-direction: column; gap: 6px; }
@@ -63,45 +67,76 @@
         #docDate { max-width: 160px; }
         label { font-size: 0.68rem; font-weight: 900; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
         input, select, textarea { padding: 11px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; width: 100%; font-weight: 800; outline: none; color: var(--charcoal); background: #fff; }
-        input:focus, select:focus, textarea:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 2px rgba(212, 175, 55, .20); }
+        input:focus, select:focus, textarea:focus { border-color: #374151; box-shadow: 0 0 0 2px rgba(31,41,55,.15); }
         input::placeholder, textarea::placeholder { color: #9ca3af; font-weight: 750; }
         input:disabled { background: #f4f6f8; color: #9ca3af; cursor: not-allowed; }
 
         #qWeight { transition: background-color 0.2s; }
 
-        .quick-add { background: #f8fafc; padding: 14px; border-radius: 7px; display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; margin-bottom: 18px; border: 1px solid var(--border); border-top: 3px solid var(--gold); }
-        .btn-add { background: var(--charcoal); color: white; border: none; padding: 10px 16px; border-radius: 4px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: .02em; }
-        .btn-add:hover { background: #111827; color: var(--gold-soft); }
+        .quick-add {
+            background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+            padding: 12px 14px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 18px;
+            border: 1.5px solid #e5e7eb;
+            flex-wrap: nowrap;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .quick-add input, .quick-add select {
+            padding: 9px 10px;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            background: white;
+            min-width: 0;
+        }
+        .quick-add input:focus, .quick-add select:focus { border-color: #9ca3af; box-shadow: 0 0 0 2px rgba(156,163,175,.2); }
+        .quick-add input#qWeight { width: 90px; flex-shrink: 0; }
+        .quick-add select#qKarat { width: 80px; flex-shrink: 0; }
+        .quick-add input#qPurity { width: 80px; flex-shrink: 0; }
+        .quick-add .qa-label { font-size: 0.65rem; font-weight: 900; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
+        .quick-add .qa-field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+        .btn-add { background: linear-gradient(135deg, #374151, #1f2937); color: #f9fafb; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; flex-shrink: 0; transition: all 0.15s; box-shadow: 0 2px 6px rgba(31,41,55,0.25); }
+        .btn-add:hover { background: linear-gradient(135deg, #1f2937, #111827); box-shadow: 0 3px 10px rgba(31,41,55,0.35); }
 
-        .item-card { border: 1px solid var(--border-dark); border-radius: 7px; padding: 14px; margin-bottom: 14px; background: #fbfcfe; transition: border 0.2s, box-shadow 0.2s; }
-        .item-card.editing { border: 2px solid var(--charcoal); background: #f8fafc; box-shadow: inset 0 3px 0 var(--gold); }
+        .item-card { border: 1px solid var(--border-dark); border-radius: 10px; padding: 14px; margin-bottom: 10px; background: linear-gradient(135deg, #fff 80%, #fafafa); transition: border 0.2s, box-shadow 0.2s; }
+        .item-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .item-card.editing { border: 2px solid #374151; background: linear-gradient(135deg, #f9fafb, #f3f4f6); box-shadow: 0 4px 14px rgba(31,41,55,0.12); }
         .card-view { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .card-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
 
-        .karat-badge { background: var(--dark-badge); color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 950; min-width: 50px; text-align: center; box-shadow: inset 0 -2px 0 rgba(212,175,55,.35); }
-        .item-text { font-size: 1.18rem; font-weight: 950; color: var(--charcoal); letter-spacing: -0.04em; white-space: nowrap; }
-        .item-price { color: #000; font-size: 1.25rem; font-weight: 950; letter-spacing: .02em; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+        .karat-badge { background: linear-gradient(135deg, #374151, #1f2937); color: #f9fafb; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 950; min-width: 50px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+        .item-text { font-size: 1.1rem; font-weight: 800; color: var(--charcoal); letter-spacing: -0.03em; white-space: nowrap; }
+        .item-price { color: var(--primary-dark); font-size: 1.2rem; font-weight: 950; letter-spacing: .01em; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 
-        .thumb-preview { width: 45px; height: 45px; border-radius: 3px; object-fit: cover; background: #f1f5f9; border: 1px solid var(--border); }
-        .checkbox-ui { width: 20px; height: 20px; cursor: pointer; accent-color: var(--gold-dark); }
+        .thumb-preview { width: 45px; height: 45px; border-radius: 6px; object-fit: cover; background: #f1f5f9; border: 1px solid var(--border); }
+        .checkbox-ui { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary-dark); }
 
-        .edit-drawer { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid #d8dee8; }
+        .edit-drawer { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px dashed #d1d5db; }
         .item-card.editing .edit-drawer { display: block; }
-        .btn-photo { background: #536176; color: white; border: none; padding: 11px; border-radius: 4px; font-size: 0.82rem; font-weight: 900; cursor: pointer; }
+        .btn-photo { background: #6b7280; color: white; border: none; padding: 11px; border-radius: 6px; font-size: 0.82rem; font-weight: 900; cursor: pointer; }
         .btn-photo:hover { background: var(--charcoal); }
-        .btn-action { width: 100%; padding: 15px; border-radius: 5px; border: 1px solid var(--border); font-weight: 950; cursor: pointer; margin-top: 10px; text-transform: uppercase; letter-spacing: .02em; background: #f8fafc !important; color: var(--charcoal) !important; }
-        .btn-action:first-of-type { border-bottom: 3px solid var(--gold); }
-        .btn-action:last-of-type { color: var(--danger) !important; background: #fff !important; }
-        #bulkBar { display: none; justify-content: space-between; align-items: center; background: #fff7ed; padding: 12px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #fed7aa; border-left: 4px solid var(--danger); }
-        #bulkBar button { background: var(--danger) !important; color: white !important; border:none; padding: 7px 12px !important; border-radius: 4px !important; font-weight:900 !important; }
+        .btn-action { width: 100%; padding: 14px; border-radius: 8px; border: 1.5px solid #d1d5db; font-weight: 900; cursor: pointer; margin-top: 10px; text-transform: uppercase; letter-spacing: .02em; font-size: 0.9rem; transition: all 0.15s; background: #f9fafb; color: #374151; }
+        .btn-action:hover { background: #f3f4f6; }
+        #bulkBar { display: none; justify-content: space-between; align-items: center; background: #f9fafb; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e5e7eb; border-left: 4px solid #9ca3af; }
+        #bulkBar button { background: #4b5563 !important; color: white !important; border:none; padding: 7px 12px !important; border-radius: 6px !important; font-weight:900 !important; }
+
+        .btn-bottom { flex: 1; padding: 9px 14px; border-radius: 7px; border: 1.5px solid #d1d5db; font-weight: 800; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; letter-spacing: .04em; transition: all 0.15s; background: linear-gradient(135deg, #f9fafb, #f3f4f6); color: #374151; }
+        .btn-bottom:hover { background: linear-gradient(135deg, #f3f4f6, #e5e7eb); border-color: #9ca3af; }
+        .btn-bottom-danger { color: #6b7280; }
+        .btn-bottom-danger:hover { color: #374151; }
 
         @media (max-width: 560px) {
             body { padding: 6px; }
             .container { padding: 15px; border-radius: 8px; }
+            .header { margin: -15px -15px 16px; padding: 15px 15px 12px; border-radius: 8px 8px 0 0; }
             .header h2 { font-size: 1.45rem; }
             .grid-settings { grid-template-columns: 1fr; }
-            .quick-add { grid-template-columns: 1fr 1fr; }
-            .btn-add { grid-column: 1 / -1; }
+            .quick-add { flex-wrap: wrap; }
+            .quick-add input#qWeight, .quick-add select#qKarat, .quick-add input#qPurity { width: 70px; }
             .card-view { align-items: flex-start; gap: 10px; }
             .card-left { gap: 8px; flex-wrap: wrap; }
             .item-price { font-size: 1.1rem; }
@@ -169,15 +204,21 @@
     </div>
 
     <div class="quick-add">
-        <div class="input-group"><label>Weight</label><input type="number" id="qWeight" placeholder="0.00"></div>
-        <div class="input-group">
-            <label>Karat</label>
+        <div class="qa-field">
+            <span class="qa-label">Weight</span>
+            <input type="number" id="qWeight" placeholder="0.00">
+        </div>
+        <div class="qa-field">
+            <span class="qa-label">Karat</span>
             <select id="qKarat" onchange="syncPurity('qKarat', 'qPurity')">
-                <option value="8">8K</option><option value="9">9K</option><option value="10" selected>10K</option><option value="12">12K</option><option value="14">14K</option><option value="18">18K</option><option value="22">22K</option><option value="24">24K</option><option value="custom">Custom</option>
+                <option value="8">8K</option><option value="9">9K</option><option value="10" selected>10K</option><option value="12">12K</option><option value="14">14K</option><option value="18">18K</option><option value="21">21K</option><option value="22">22K</option><option value="24">24K</option><option value="custom">Custom</option>
             </select>
         </div>
-        <div class="input-group"><label>Purity %</label><input type="number" id="qPurity" value="41.67" step="0.01" disabled></div>
-        <button class="btn-add" onclick="addNew()">ADD ITEM</button>
+        <div class="qa-field">
+            <span class="qa-label">Purity %</span>
+            <input type="number" id="qPurity" value="41.67" step="0.01" disabled>
+        </div>
+        <button class="btn-add" onclick="addNew()">+ Add</button>
     </div>
 
     <div id="bulkBar">
@@ -187,13 +228,67 @@
 
     <div id="recordsList"></div>
 
-    <button class="btn-action" style="background:#f59e0b; color:white;" onclick="window.print()">🖨️ Generate Receipt</button>
-    <button class="btn-action" style="background:#ef4444; color:white;" onclick="resetApp()">🔄 Clear Session</button>
+    <div style="display:flex; gap:10px; margin-top:12px;">
+        <button class="btn-bottom" onclick="window.print()">🖨️ Receipt</button>
+        <button class="btn-bottom btn-bottom-danger" onclick="resetApp()">🔄 Clear</button>
+    </div>
 </div>
 
 <script>
     let records = [];
-    const karatMap = { 8: 33.33, 9: 37.50, 10: 41.67, 12: 50.00, 14: 58.33, 18: 75.0, 22: 91.67, 24: 99.99 };
+    const karatMap = { 8: 33.33, 9: 37.50, 10: 41.67, 12: 50.00, 14: 58.33, 18: 75.0, 21: 87.50, 22: 91.67, 24: 99.99 };
+
+    // ── IndexedDB ──────────────────────────────────────────────
+    const DB_NAME = 'GoldTrackerDB', DB_VER = 1, DB_STORE = 'state';
+    let db = null;
+
+    function openDB() {
+        return new Promise((resolve, reject) => {
+            const req = indexedDB.open(DB_NAME, DB_VER);
+            req.onupgradeneeded = e => e.target.result.createObjectStore(DB_STORE, { keyPath: 'id' });
+            req.onsuccess = e => { db = e.target.result; resolve(); };
+            req.onerror = () => reject(req.error);
+        });
+    }
+
+    function dbSave(data) {
+        if (!db) return;
+        const tx = db.transaction(DB_STORE, 'readwrite');
+        tx.objectStore(DB_STORE).put({ id: 'session', ...data });
+    }
+
+    function dbLoad() {
+        return new Promise(resolve => {
+            if (!db) return resolve(null);
+            const tx = db.transaction(DB_STORE, 'readonly');
+            const req = tx.objectStore(DB_STORE).get('session');
+            req.onsuccess = () => resolve(req.result || null);
+            req.onerror = () => resolve(null);
+        });
+    }
+
+    function dbClear() {
+        if (!db) return;
+        const tx = db.transaction(DB_STORE, 'readwrite');
+        tx.objectStore(DB_STORE).delete('session');
+    }
+
+    let saveTimer = null;
+    function scheduleSave() {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+            dbSave({
+                records,
+                date:    document.getElementById('docDate').value,
+                seller:  document.getElementById('seller').value,
+                buyer:   document.getElementById('buyer').value,
+                spot:    document.getElementById('spotPrice').value,
+                percent: document.getElementById('percent').value,
+                unit:    document.getElementById('unit').value
+            });
+        }, 600);
+    }
+    // ──────────────────────────────────────────────────────────
 
     function syncPurity(kId, pId) {
         const kSelect = document.getElementById(kId);
@@ -296,7 +391,7 @@
         document.getElementById('uLabel').innerText = unit === 'ozt' ? 'ozt' : (unit === 'dwt' ? 'dwt' : 'g');
         document.getElementById('totalC').innerText = `$${tC.toFixed(2)}`;
         document.getElementById('pTotalPrint').innerText = `$${tC.toFixed(2)}`;
-        localStorage.setItem('goldState_stable', JSON.stringify(records));
+        scheduleSave();
         syncHeader();
     }
 
@@ -363,13 +458,43 @@
         document.getElementById('bulkCount').innerText = `${selCount} Selected`;
     }
 
-    function resetApp() { if(confirm("Clear everything?")) { records = []; localStorage.removeItem('goldState_stable'); recalc(); } }
+    function resetApp() {
+        if(confirm("Clear everything?")) {
+            records = [];
+            dbClear();
 
-    window.onload = () => {
+            // Reset all form fields
+            document.getElementById('docDate').valueAsDate = new Date();
+            document.getElementById('seller').value = '';
+            document.getElementById('buyer').value = '';
+            document.getElementById('spotPrice').value = '';
+            document.getElementById('percent').value = '90';
+            document.getElementById('unit').value = 'grams';
+            document.getElementById('qWeight').value = '';
+            document.getElementById('qKarat').value = '10';
+            syncPurity('qKarat', 'qPurity');
+
+            // Reset print header fields
+            syncHeader();
+            recalc();
+        }
+    }
+
+    window.onload = async () => {
         document.getElementById('docDate').valueAsDate = new Date();
-        const saved = localStorage.getItem('goldState_stable');
-        if(saved) records = JSON.parse(saved);
+        await openDB();
+        const saved = await dbLoad();
+        if (saved) {
+            records = saved.records || [];
+            if (saved.date)    document.getElementById('docDate').value = saved.date;
+            if (saved.seller)  document.getElementById('seller').value = saved.seller;
+            if (saved.buyer)   document.getElementById('buyer').value = saved.buyer;
+            if (saved.spot)    document.getElementById('spotPrice').value = saved.spot;
+            if (saved.percent) document.getElementById('percent').value = saved.percent;
+            if (saved.unit)    document.getElementById('unit').value = saved.unit;
+        }
         fetchSpot();
+        recalc();
     };
 </script>
 </body>

@@ -482,64 +482,109 @@
     }
 
     async function shareReceipt() {
-        const spot    = parseFloat(document.getElementById('spotPrice').value) || 0;
-        const pct     = parseFloat(document.getElementById('percent').value) / 100 || 0;
-        const unit    = document.getElementById('unit').value;
+        const date   = document.getElementById('docDate').value || new Date().toLocaleDateString();
+        const seller = document.getElementById('seller').value || '—';
+        const buyer  = document.getElementById('buyer').value || '—';
+        const spot   = parseFloat(document.getElementById('spotPrice').value) || 0;
+        const pct    = parseFloat(document.getElementById('percent').value) || 0;
+        const unit   = document.getElementById('unit').value;
         const unitLabel = unit === 'ozt' ? 'ozt' : (unit === 'dwt' ? 'dwt' : 'g');
-        const date    = document.getElementById('docDate').value || new Date().toLocaleDateString();
-        const seller  = document.getElementById('seller').value || '—';
-        const buyer   = document.getElementById('buyer').value || '—';
 
         let totalCost = 0;
         let rows = '';
         records.forEach((rec, i) => {
             const conv  = unit === 'grams' ? 31.1035 : (unit === 'dwt' ? 20 : 1);
-            const price = (rec.weight / conv) * (rec.purity / 100) * spot * pct;
+            const price = (rec.weight / conv) * (rec.purity / 100) * spot * (pct / 100);
             totalCost  += price;
+            const imgCell = rec.img
+                ? `<img src="${rec.img}" style="width:60px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #e5e7eb;">`
+                : `<div style="width:60px;height:60px;background:#f3f4f6;border-radius:4px;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#9ca3af;">NO PHOTO</div>`;
             rows += `<tr>
-                <td style="padding:10px;border-bottom:1px solid #eee;">${i+1}</td>
-                <td style="padding:10px;border-bottom:1px solid #eee;">${rec.karat}</td>
-                <td style="padding:10px;border-bottom:1px solid #eee;">${rec.weight} ${unitLabel}</td>
-                <td style="padding:10px;border-bottom:1px solid #eee;">${rec.purity}%</td>
-                <td style="padding:10px;border-bottom:1px solid #eee;">${rec.notes || '—'}</td>
-                <td style="padding:10px;border-bottom:1px solid #eee;font-weight:700;">$${price.toFixed(2)}</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:middle;">${imgCell}</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:middle;">
+                    <span style="background:#1f2937;color:white;padding:4px 8px;border-radius:4px;font-size:0.8rem;font-weight:800;">${rec.karat}</span>
+                </td>
+                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:middle;font-weight:700;">${rec.weight} ${unitLabel}</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:middle;">${rec.purity}%</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:middle;color:#6b7280;font-size:0.85rem;">${rec.notes || '—'}</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:middle;font-weight:900;font-family:monospace;text-align:right;">$${price.toFixed(2)}</td>
             </tr>`;
         });
 
-        const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-        <title>Gold Purchase Receipt</title>
-        <style>body{font-family:-apple-system,sans-serif;padding:30px;color:#111;}
-        h1{font-size:1.5rem;margin-bottom:4px;}
-        .meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0;padding:12px;background:#f9fafb;border-radius:6px;}
-        .meta label{font-size:0.65rem;font-weight:800;color:#6b7280;text-transform:uppercase;display:block;}
-        .meta span{font-weight:700;}
-        table{width:100%;border-collapse:collapse;margin-top:16px;}
-        th{text-align:left;padding:10px;background:#1f2937;color:white;font-size:0.75rem;text-transform:uppercase;}
-        .total{text-align:right;font-size:1.2rem;font-weight:900;padding:14px;}
-        .sig{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:50px;}
-        .sig div{border-top:1px solid #000;padding-top:6px;font-size:0.75rem;font-weight:700;text-align:center;}
-        </style></head><body>
-        <h1>GOLD PURCHASE RECEIPT</h1>
-        <p style="color:#6b7280;font-size:0.85rem;">Date: ${date}</p>
-        <div class="meta">
-            <div><label>Seller</label><span>${seller}</span></div>
-            <div><label>Buyer</label><span>${buyer}</span></div>
-            <div><label>Spot Price</label><span>$${spot.toFixed(2)}</span></div>
-            <div><label>% of Spot</label><span>${(pct*100).toFixed(2)}%</span></div>
-        </div>
-        <table>
-            <thead><tr><th>#</th><th>Karat</th><th>Weight</th><th>Purity</th><th>Notes</th><th>Amount</th></tr></thead>
-            <tbody>${rows}</tbody>
-            <tfoot><tr><td colspan="5" class="total">TOTAL:</td>
-            <td class="total">$${totalCost.toFixed(2)}</td></tr></tfoot>
-        </table>
-        <div class="sig"><div>SELLER SIGNATURE</div><div>BUYER SIGNATURE</div></div>
-        </body></html>`;
+        const html = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gold Purchase Receipt — ${date}</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 32px; color: #111827; background: white; max-width: 700px; margin: 0 auto; }
+  .header-row { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #111827; padding-bottom: 16px; margin-bottom: 16px; }
+  h1 { font-size: 1.7rem; font-weight: 900; letter-spacing: -0.03em; margin: 0 0 4px; }
+  .date { color: #6b7280; font-size: 0.85rem; font-weight: 600; }
+  .buyer-block { text-align: right; }
+  .buyer-block h3 { font-size: 1rem; font-weight: 900; margin: 0 0 2px; }
+  .buyer-block p { font-size: 0.7rem; color: #6b7280; margin: 0; }
+  .meta-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .seller-block label { font-size: 0.6rem; font-weight: 800; color: #6b7280; text-transform: uppercase; letter-spacing: .08em; display: block; margin-bottom: 3px; }
+  .seller-block p { font-size: 1.05rem; font-weight: 700; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; margin: 0; }
+  .meta-box { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: #f9fafb; padding: 10px 12px; border-radius: 6px; border: 1px solid #e5e7eb; }
+  .meta-item label { font-size: 0.58rem; color: #6b7280; display: block; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+  .meta-item span { font-size: 0.9rem; font-weight: 800; }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: #1f2937; color: white; }
+  th { text-align: left; padding: 10px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: .06em; font-weight: 800; }
+  .total-row td { padding: 14px 10px; font-weight: 900; }
+  .sig { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin-top: 56px; }
+  .sig div { border-top: 1px solid #111827; padding-top: 8px; font-size: 0.72rem; font-weight: 800; text-align: center; color: #374151; text-transform: uppercase; letter-spacing: .04em; }
+</style>
+</head><body>
+
+<div class="header-row">
+  <div>
+    <h1>GOLD PURCHASE RECEIPT</h1>
+    <p class="date">Date: ${date}</p>
+  </div>
+  <div class="buyer-block">
+    <h3>${buyer}</h3>
+    <p>Licensed Precious Metals Dealer</p>
+  </div>
+</div>
+
+<div class="meta-grid">
+  <div class="seller-block">
+    <label>Seller Name</label>
+    <p>${seller}</p>
+  </div>
+  <div class="meta-box">
+    <div class="meta-item"><label>Spot Price</label><span>$${spot.toFixed(2)}</span></div>
+    <div class="meta-item"><label>Payout %</label><span>${pct}%</span></div>
+    <div class="meta-item"><label>Unit</label><span>${unitLabel}</span></div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Photo</th><th>Karat</th><th>Weight</th><th>Purity</th><th>Notes</th><th style="text-align:right;">Amount</th></tr>
+  </thead>
+  <tbody>${rows}</tbody>
+  <tfoot>
+    <tr class="total-row">
+      <td colspan="5" style="text-align:right;font-size:0.9rem;color:#6b7280;">TOTAL SETTLEMENT:</td>
+      <td style="text-align:right;font-size:1.3rem;font-family:monospace;">$${totalCost.toFixed(2)}</td>
+    </tr>
+  </tfoot>
+</table>
+
+<div class="sig">
+  <div>Seller Signature</div>
+  <div>Buyer / Agent Signature</div>
+</div>
+
+</body></html>`;
 
         const blob = new Blob([html], { type: 'text/html' });
-        const file = new File([blob], `receipt-${date}.html`, { type: 'text/html' });
+        const file = new File([blob], `gold-receipt-${date}.html`, { type: 'text/html' });
 
-        // Try native share (iOS/Android)
+        // Native share sheet (iOS AirDrop, Messages, Mail, Android)
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
                 await navigator.share({ files: [file], title: 'Gold Purchase Receipt', text: `Receipt — ${date}` });
@@ -547,11 +592,11 @@
             } catch(e) { if (e.name === 'AbortError') return; }
         }
 
-        // Fallback: download the file
+        // Fallback: download
         const url = URL.createObjectURL(blob);
         const a   = document.createElement('a');
         a.href    = url;
-        a.download = `receipt-${date}.html`;
+        a.download = `gold-receipt-${date}.html`;
         a.click();
         URL.revokeObjectURL(url);
     }
